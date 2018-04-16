@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "377447356375",
+    "firebase_url": "https://skripsi-94294.firebaseio.com",
+    "project_id": "skripsi-94294",
+    "storage_bucket": "skripsi-94294.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377447356375:android:e61414b87c070bdb",
+        "android_client_info": {
+          "package_name": "com.example.novi.cb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377447356375-cbd8bt44kkoljun5l5b77egifhpbpag5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArNpgVKgJ2U7xUskqjXLYhHo_NWI4MpqI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

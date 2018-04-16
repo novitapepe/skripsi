@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:weightSum="5"
+   >
+
+    <ImageView
+        android:id="@+id/imgsensor"
+        android:src="@drawable/door0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_weight="4"
+
+        >
+        <TextView
+            android:id="@+id/txtnamasensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data 1"
+
+            android:paddingLeft="10dp"
+            />
+        <TextView
+            android:id="@+id/txtstatussensor"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data 2"
+
+            android:paddingLeft="10dp"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txttime"
+        android:text="08:02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>
