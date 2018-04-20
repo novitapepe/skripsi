@@ -12,28 +12,24 @@ import android.widget.Toast;
 import com.example.novi.cb.R;
 import com.example.novi.cb.model.DataDetails;
 import com.example.novi.cb.sqlite.SqliteCRUDHelper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
-    SqliteCRUDHelper helper ;
     Activity context;
-    List<DataDetails> datasensor;
+    List<String> sensorVal;
 
     int sensortype = 0;
 
 
-    public RecyclerViewAdapter(Activity context, int sensortype) {
+    public RecyclerViewAdapter(Activity context, int sensortype, List<String> sensorVal) {
         this.context = context;
         this.sensortype = sensortype;
-
-        helper=new SqliteCRUDHelper(context);
-        datasensor = helper.getDetailSensor();
-        Toast.makeText(context, "" + datasensor.size(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, "" + datasensor.get(0).getSensor(), Toast.LENGTH_SHORT).show();
-
+        this.sensorVal = sensorVal;
     }
 
     @Override
@@ -50,17 +46,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         if(sensortype==0){
             holder.txtnama.setText("Sensor Cahaya");
-            holder.txtstatus.setText(datasensor.get(position).getValue());
-            holder.txttime.setText(datasensor.get(position).getTime());
+            holder.txtstatus.setText(sensorVal.get(position));
+
+            if (sensorVal.get(position).equalsIgnoreCase(" on")) {
+                holder.imgsensor.setImageResource(R.drawable.lampu_on1);
+            } else {
+                holder.imgsensor.setImageResource(R.drawable.lampu_off);
+            }
 
         }else if (sensortype==1){
             holder.txtnama.setText("Sensor Pintu");
-            holder.txtstatus.setText(datasensor.get(position).getValue());
-            holder.txttime.setText(datasensor.get(position).getTime());
+            holder.txtstatus.setText(sensorVal.get(position));
+
+            if (sensorVal.get(position).equalsIgnoreCase("open")) {
+                holder.imgsensor.setImageResource(R.drawable.door1);
+            } else {
+                holder.imgsensor.setImageResource(R.drawable.door0);
+            }
         }else if (sensortype==2){
             holder.txtnama.setText("Sensor Temperatur");
-            holder.txtstatus.setText(datasensor.get(position).getValue());
-            holder.txttime.setText(datasensor.get(position).getTime());
+            holder.txtstatus.setText(sensorVal.get(position) + " °C");
+
+            double suhu = Double.parseDouble(sensorVal.get(position));
+
+            if (suhu > 29.00) {
+                holder.imgsensor.setImageResource(R.drawable.suhu0);
+            } else {
+                holder.imgsensor.setImageResource(R.drawable.suhu1);
+            }
         }
 
 
@@ -69,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return datasensor.size();
+        return sensorVal.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -80,7 +93,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             imgsensor = (ImageView) v.findViewById(R.id.imgsensor);
             txtnama = (TextView) v.findViewById(R.id.txtnamasensor);
             txtstatus = (TextView) v.findViewById(R.id.txtstatussensor);
-            txttime = (TextView) v.findViewById(R.id.txttime);
+//            txttime = (TextView) v.findViewById(R.id.txttime);
         }
     }
 }

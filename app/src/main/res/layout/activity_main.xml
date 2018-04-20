@@ -263,6 +263,7 @@
                     </LinearLayout>
 
                     <android.support.design.widget.FloatingActionButton
+                        android:onClick="onAboutClick"
                         android:id="@+id/fabA"
                         style="@style/Widget.Design.FloatingActionButton"
                         android:src="@drawable/menu"

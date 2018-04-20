@@ -12,8 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.novi.cb.model.Sensor;
 import com.example.novi.cb.preference.PreferenceHelper;
 import com.example.novi.cb.sqlite.SqliteCRUDHelper;
 import com.google.firebase.database.DataSnapshot;
@@ -27,16 +29,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
-    FirebaseDatabase database;
     DatabaseReference refLdr;
     DatabaseReference refSwitch;
     DatabaseReference refTemp;
-
-
-
-    ListView _lv;
-    ArrayList<String> sensor = new ArrayList<>();
-    String[] getSensor ;
+    FirebaseDatabase fbDatabase;
+    SqliteCRUDHelper helper ;
 
     Boolean updateSwitch = false;
     Boolean updateLdr = false;
@@ -44,7 +41,8 @@ public class MainActivity extends AppCompatActivity{
 
     TextView tldr,tsuhu,tswitch;
 
-    SqliteCRUDHelper helper ;
+    List<Sensor> listSensors;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
         initial();
 
         refLdr = FirebaseDatabase.getInstance().getReference("ldr");
-        refSwitch = FirebaseDatabase.getInstance().getReference("switch");
+        refSwitch = fbDatabase.getReference();
         refTemp = FirebaseDatabase.getInstance().getReference("adc");
 
     }
@@ -64,6 +62,18 @@ public class MainActivity extends AppCompatActivity{
         getMenuInflater().inflate(R.menu.menu_beranda, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void showAbout(){
+
+        View v = getLayoutInflater().inflate(R.layout.about_me, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert
+                .setView(v)
+                .setCancelable(false)
+                .setNegativeButton("Tutup", null)
+                .show();
     }
 
     @Override
@@ -89,13 +99,14 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initial() {
+        fbDatabase = FirebaseDatabase.getInstance();
+        listSensors = new ArrayList<>();
+
         tldr = (TextView) findViewById(R.id.cv1);
         tsuhu = (TextView) findViewById(R.id.cv3);
         tswitch = (TextView) findViewById(R.id.cv2);
 
         helper = new SqliteCRUDHelper(this);
-
-
     }
 
     public void onLightClick(View v){
@@ -114,10 +125,9 @@ public class MainActivity extends AppCompatActivity{
         i.putExtra("key","2");
         startActivity(i);
     }
+
     public void onAboutClick(View v){
-        Intent i = new Intent(this, Details.class);
-        i.putExtra("key","about");
-        startActivity(i);
+        showAbout();
     }
 
     @Override
@@ -134,13 +144,14 @@ public class MainActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
 
-        refSwitch.addValueEventListener(new ValueEventListener() {
+        refSwitch.child("switch").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> s = dataSnapshot.getChildren().
-                tswitch.setText(dataSnapshot.getValue().toString());
-
-
+                List<String> listSwitch = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    listSwitch.add(snapshot.getValue().toString());
+                }
+                tswitch.setText(listSwitch.get(listSwitch.size() - 1));
             }
 
             @Override
@@ -148,17 +159,15 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+
         refLdr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                tldr.setText(dataSnapshot.getValue().toString());
-
-                if(updateLdr==true){
-                        helper.addSensor("ldr",dataSnapshot.getValue().toString());
-
-                }else{
-                    updateLdr =true;
+                List<String> listLdr = new ArrayList<>();
+                for (DataSnapshot snapshotLdr: dataSnapshot.getChildren()) {
+                    listLdr.add(snapshotLdr.getValue().toString());
                 }
+                tldr.setText(listLdr.get(listLdr.size() - 1));
             }
 
             @Override
@@ -169,13 +178,11 @@ public class MainActivity extends AppCompatActivity{
         refTemp.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                tsuhu.setText(dataSnapshot.getValue().toString()+" ºC");
-                if(updateSuhu==true){
-                        helper.addSensor("suhu",dataSnapshot.getValue().toString()+" ºC");
-
-                }else{
-                    updateSuhu =true;
+                List<String> listTemp = new ArrayList<>();
+                for (DataSnapshot snapshotTemp: dataSnapshot.getChildren()) {
+                    listTemp.add(snapshotTemp.getValue().toString());
                 }
+                tsuhu.setText(listTemp.get(listTemp.size() - 1) + " °C");
             }
 
             @Override
